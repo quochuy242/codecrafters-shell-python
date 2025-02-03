@@ -8,6 +8,7 @@ def main():
     # Wait for user input
     cmd = input()
     print(f'{cmd}: command not found\n')
+    main()
 
 
 if __name__ == "__main__":
