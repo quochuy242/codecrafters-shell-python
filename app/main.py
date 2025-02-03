@@ -7,7 +7,7 @@ def main():
 
     # Wait for user input
     cmd = input()
-    print(f'{cmd}: command not found\n')
+    print(f'{cmd}: command not found')
     main()
 
 
