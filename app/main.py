@@ -6,7 +6,10 @@ def main():
         cmd = input("$ ")
         if cmd == "exit 0":
             return 0
-        print(f"{cmd}: command not found")
+        elif cmd[:4] == 'echo':
+            print(cmd[5:])
+        else:
+            print(f"{cmd}: command not found")
   
 
 if __name__ == "__main__":
