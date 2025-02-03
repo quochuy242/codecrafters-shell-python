@@ -7,9 +7,12 @@ def main():
 
     # Wait for user input
     cmd = input()
-    print(f'{cmd}: command not found')
-    main()
-
+    if cmd == 'exit 0': 
+        sys.exit(0)
+    else:
+        print(f'{cmd}: command not found')
+        main()
+  
 
 if __name__ == "__main__":
     main()
