@@ -3,6 +3,8 @@ import subprocess
 import sys
 from typing import List, Optional, Tuple
 
+from .helpers import check_builtin_command, check_exists_dir, find_exec_path
+
 
 def handle_echo(cmd: str) -> None:
     try:
@@ -23,21 +25,6 @@ def handle_exit(cmd: str) -> None:
             exit(0)
     except Exception as e:
         raise e
-
-
-def find_exec_path(cmd: str) -> Optional[str]:
-    paths = os.environ.get("PATH").split(":")
-    for path in paths:
-        exec_path = os.path.join(path, cmd)
-        if os.path.exists(exec_path):
-            return exec_path
-    return None
-
-
-def check_builtin_command(cmd: str) -> bool:
-    builtin_cmds = ["echo", "exit", "type", "pwd"]
-    res = True if cmd in builtin_cmds else False
-    return res
 
 
 def handle_type(cmd: str) -> None:
@@ -74,13 +61,37 @@ def run_program(program_name: str, args: List[str]):
         raise e
 
 
-def pwd():
+def pwd() -> str:
     try:
         curr_dir = os.getcwd()
         sys.stdout.write(f"{curr_dir}\n")
     except Exception as e:
         raise e
-    return
+    return curr_dir
+
+
+def cd(directory: str):
+    try:
+        # If the directory is absolute
+        if directory.startswith("/"):
+            # Check the new directory exists
+            if not check_exists_dir(directory):
+                return
+            os.chdir(directory)
+            return
+        else:  # If the directory is relative
+            # Get the current directory
+            curr_dir = pwd()
+            abs_dir = os.path.join(curr_dir, directory)
+
+            # Check the new directory exists
+            if not check_exists_dir(abs_dir):
+                return
+
+            # Change the directory
+            os.chdir(abs_dir)
+    except Exception as e:
+        raise e
 
 
 def main():
@@ -101,6 +112,9 @@ def main():
                 continue
             if command == "pwd":
                 pwd()
+                continue
+            if command == "cd":
+                cd(args[0])
                 continue
         elif find_exec_path(command) is not None:
             run_program(program_name=command, args=args)
