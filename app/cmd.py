@@ -89,6 +89,9 @@ def cd(directory: str):
                     curr_dir = os.path.dirname(curr_dir)
                 elif element == ".":
                     continue
+                elif element == "~":
+                    os.chdir(os.path.expanduser("~"))
+                    return
                 else:
                     curr_dir = os.path.join(curr_dir, element)
 
