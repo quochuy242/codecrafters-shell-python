@@ -1,7 +1,6 @@
 import shlex
 import os
 import sys
-import re
 from typing import List, Optional
 
 
