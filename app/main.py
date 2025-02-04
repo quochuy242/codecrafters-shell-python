@@ -1,19 +1,13 @@
 import sys
 from typing import List
-
+import shlex
 from . import cmd, helper
 
 
 def main():
     while True:
         user_input = input("$ ")
-        try:
-            command, args = user_input.split(" ", 1)
-            args: List[str] = helper.extract_args(args)
-        except ValueError:
-            # If the input is just a command
-            command = user_input
-            args = []
+        command, *args = shlex.split(user_input)
 
         # Check if the command is a shell builtin
         if helper.check_builtin_command(command):

@@ -28,7 +28,3 @@ def check_exists_dir(path: str) -> bool:
 
 def remove_unwanted_spaces(string: str) -> str:
     return " ".join(string.split())
-
-
-def extract_args(args: str) -> List[str]:
-    return shlex.split(args)
