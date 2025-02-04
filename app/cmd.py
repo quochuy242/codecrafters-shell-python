@@ -1,53 +1,45 @@
 import os
 import subprocess
 import sys
-from typing import List, Optional, Tuple
+from typing import List
 
-from .helper import check_builtin_command, check_exists_dir, find_exec_path
+from . import helper
 
 
-def cmd_echo(cmd: str) -> None:
+def run_echo(args: List[str]) -> None:
     try:
-        # Check if the command is echo
-        check = cmd.split(" ")[0] == "echo"
-        if check:
-            sys.stdout.write(f"{cmd.replace('echo ', '')}\n")
+        # Print the result
+        sys.stdout.write(f"{' '.join(args)}\n")
     except Exception as e:
         raise e
     return
 
 
-def cmd_exit(cmd: str) -> None:
+def run_exit(args: List[str]) -> None:
     try:
-        # Check if the command is exit
-        check = cmd.split(" ")[0] == "exit"
-        if check:
-            exit(0)
+        sys.exit(int(args[0]) if args else 0)
     except Exception as e:
         raise e
 
 
-def cmd_type(cmd: str) -> None:
+def run_type(args: List[str]) -> None:
     try:
-        # Check if the command is type
-        check = cmd.split(" ")[0] == "type"
-        if not check:
-            raise Exception("Not a type command\n")
+        for arg in args:
+            # Check if the command is valid and print the result
+            builtin_check = helper.check_builtin_command(
+                arg
+            )  # Check if the command is a shell builtin
+            exec_path = helper.find_exec_path(
+                arg
+            )  # Check if the command is an executable
 
-        # Check if the command is valid and print the result
-        content = cmd.replace("type ", "")
-        builtin_check = check_builtin_command(
-            content
-        )  # Check if the command is a shell builtin
-        exec_path = find_exec_path(content)  # Check if the command is an executable
-
-        # Print the result
-        if builtin_check:
-            sys.stdout.write(f"{content} is a shell builtin\n")
-        elif exec_path is not None:
-            sys.stdout.write(f"{content} is {exec_path}\n")
-        else:
-            sys.stdout.write(f"{content}: not found\n")
+            # Print the result
+            if builtin_check:
+                sys.stdout.write(f"{arg} is a shell builtin\n")
+            elif exec_path is not None:
+                sys.stdout.write(f"{arg} is {exec_path}\n")
+            else:
+                sys.stdout.write(f"{arg}: not found\n")
     except Exception as e:
         raise e
     return
@@ -75,7 +67,7 @@ def cd(directory: str):
         # If the directory is absolute
         if directory.startswith("/"):
             # Check the new directory exists
-            if not check_exists_dir(directory):
+            if not helper.check_exists_dir(directory):
                 return
             os.chdir(directory)
             return
@@ -96,7 +88,7 @@ def cd(directory: str):
                     curr_dir = os.path.join(curr_dir, element)
 
             # Check the new directory exists
-            if not check_exists_dir(curr_dir):
+            if not helper.check_exists_dir(curr_dir):
                 return
 
             # Change the directory

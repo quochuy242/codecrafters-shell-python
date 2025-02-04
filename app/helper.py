@@ -1,7 +1,8 @@
+import shlex
 import os
-import subprocess
 import sys
-from typing import List, Optional, Tuple
+import re
+from typing import List, Optional
 
 
 def check_builtin_command(cmd: str) -> bool:
@@ -24,3 +25,11 @@ def check_exists_dir(path: str) -> bool:
     if not check:
         sys.stdout.write(f"cd: {path}: No such file or directory\n")
     return check
+
+
+def remove_unwanted_spaces(string: str) -> str:
+    return " ".join(string.split())
+
+
+def extract_args(args: str) -> List[str]:
+    return shlex.split(args)
