@@ -1,7 +1,6 @@
-import shlex
 import os
 import sys
-from typing import List, Optional
+from typing import Optional
 
 
 def check_builtin_command(cmd: str) -> bool:

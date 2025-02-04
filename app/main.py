@@ -1,5 +1,4 @@
 import sys
-from typing import List
 import shlex
 from . import cmd, helper
 
