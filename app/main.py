@@ -35,7 +35,7 @@ def find_exec_path(cmd: str) -> Optional[str]:
 
 
 def check_builtin_command(cmd: str) -> bool:
-    builtin_cmds = ["echo", "exit", "type"]
+    builtin_cmds = ["echo", "exit", "type", "pwd"]
     res = True if cmd in builtin_cmds else False
     return res
 
@@ -74,6 +74,15 @@ def run_program(program_name: str, args: List[str]):
         raise e
 
 
+def pwd():
+    try:
+        curr_dir = os.getcwd()
+        sys.stdout.write(f"{curr_dir}\n")
+    except Exception as e:
+        raise e
+    return
+
+
 def main():
     while True:
         user_input = input("$ ")
@@ -89,6 +98,9 @@ def main():
                 continue
             if command == "type":
                 handle_type(user_input)
+                continue
+            if command == "pwd":
+                pwd()
                 continue
         elif find_exec_path(command) is not None:
             run_program(program_name=command, args=args)
