@@ -33,17 +33,12 @@ def remove_unwanted_spaces(string: str) -> str:
 def capture_output(cmd: str, args: List[str], error: bool = False) -> Optional[str]:
     cmd = f"{cmd} {' '.join(args)}"
     try:
-        output = subprocess.check_output(cmd, shell=True, text=True)
-    except subprocess.CalledProcessError as e:
-        output = e.output
-    return output
-
-
-def capture_error(cmd: str, args: List[str]) -> Optional[str]:
-    cmd = f"{cmd} {' '.join(args)}"
-    try:
-        output = subprocess.check_output(
-            cmd, shell=True, text=True, stderr=subprocess.STDOUT
+        output = (
+            subprocess.check_output(
+                cmd, shell=True, text=True, stderr=subprocess.STDOUT
+            )
+            if error
+            else subprocess.check_output(cmd, shell=True, text=True)
         )
     except subprocess.CalledProcessError as e:
         output = e.output
