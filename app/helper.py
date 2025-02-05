@@ -30,21 +30,13 @@ def remove_unwanted_spaces(string: str) -> str:
     return " ".join(string.split())
 
 
-def capture_output(
-    cmd: str, args: List[str], capture_stderr: bool = False
-) -> Tuple[Optional[str], Optional[str]]:
+def capture_output(cmd: str, args: List[str]) -> Tuple[Optional[str], Optional[str]]:
     """Executes a command and captures both stdout and stderr."""
     full_cmd = f"{cmd} {' '.join(args)}"
-    try:
-        output = subprocess.run(
-            full_cmd,
-            shell=True,
-            text=True,
-            stderr=subprocess.DEVNULL if capture_stderr else None,
-        )
-        return (
-            output.stdout,
-            output.stderr if capture_stderr else None,
-        )  # stderr is None unless explicitly captured
-    except subprocess.CalledProcessError as e:
-        return e.stdout, e.stderr  # Capture both outputs when an error occurs
+    output = subprocess.run(
+        full_cmd,
+        shell=True,
+        text=True,
+        capture_output=True,
+    )
+    return output.stdout, output.stderr
