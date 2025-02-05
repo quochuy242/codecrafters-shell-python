@@ -41,7 +41,7 @@ def capture_output(
             shell=True,
             text=True,
             check=True,
-            stderr=subprocess.STDOUT if capture_stderr else None,
+            stderr=subprocess.STDOUT if not capture_stderr else None,
         )
         return (
             output.stdout,
