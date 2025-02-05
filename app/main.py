@@ -13,7 +13,7 @@ def main():
             cmd.redirect_output(command, args)
             continue
         elif "2>" in args:
-            cmd.redirect_output(command, args, error=True)
+            cmd.redirect_error(command, args, error=True)
             continue
 
         # Check if the command is a shell builtin

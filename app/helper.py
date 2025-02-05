@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from typing import Optional, List, Tuple
+from typing import Optional, List
 
 
 def check_builtin_command(cmd: str) -> bool:
@@ -30,14 +30,21 @@ def remove_unwanted_spaces(string: str) -> str:
     return " ".join(string.split())
 
 
-def capture_output(cmd: str, args: List[str]) -> Tuple[Optional[str], Optional[str]]:
+def capture_output(cmd: str, args: List[str], error: bool = False) -> Optional[str]:
+    cmd = f"{cmd} {' '.join(args)}"
+    try:
+        output = subprocess.check_output(cmd, shell=True, text=True)
+    except subprocess.CalledProcessError as e:
+        output = e.output
+    return output
+
+
+def capture_error(cmd: str, args: List[str]) -> Optional[str]:
     cmd = f"{cmd} {' '.join(args)}"
     try:
         output = subprocess.check_output(
-            cmd, shell=True, text=True, stderr=subprocess.PIPE
+            cmd, shell=True, text=True, stderr=subprocess.STDOUT
         )
-        error_txt = None
     except subprocess.CalledProcessError as e:
         output = e.output
-        error_txt = e.stderr
-    return output, error_txt
+    return output
