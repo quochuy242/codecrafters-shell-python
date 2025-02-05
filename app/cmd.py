@@ -95,3 +95,27 @@ def cd(directory: str):
             os.chdir(curr_dir)
     except Exception as e:
         raise e
+
+
+def redirect_output(cmd: str, args: List[str]) -> None:
+    try:
+        # Get the index of args containing ">"
+        idx = next((i for i, arg in enumerate(args) if ">" in arg), 0)
+
+        # Get the arguments after ">" and remove redirects args from args
+        file = args[idx + 1]
+        args = args[:idx]
+
+        # Capture the output (stdout + stderr)
+        main_output = helper.capture_output(cmd=cmd, args=args)
+
+        # Ensure directory exists
+        if os.path.dirname(file) != "":
+            os.makedirs(os.path.dirname(file), exist_ok=True)
+
+        if main_output is not None:
+            with open(file, "w") as f:
+                f.write(main_output)
+
+    except Exception as e:
+        sys.stderr.write(str(e) + "\n")

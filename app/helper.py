@@ -1,6 +1,7 @@
 import os
+import subprocess
 import sys
-from typing import Optional
+from typing import Optional, List
 
 
 def check_builtin_command(cmd: str) -> bool:
@@ -27,3 +28,12 @@ def check_exists_dir(path: str) -> bool:
 
 def remove_unwanted_spaces(string: str) -> str:
     return " ".join(string.split())
+
+
+def capture_output(cmd: str, args: List[str]) -> Optional[str]:
+    cmd = f"{cmd} {' '.join(args)}"
+    try:
+        output = subprocess.check_output(cmd, shell=True, text=True)
+    except subprocess.CalledProcessError as e:
+        output = e.output
+    return output
