@@ -40,8 +40,7 @@ def capture_output(
             full_cmd,
             shell=True,
             text=True,
-            check=True,
-            stderr=subprocess.STDOUT if not capture_stderr else None,
+            stderr=subprocess.DEVNULL if capture_stderr else None,
         )
         return (
             output.stdout,
