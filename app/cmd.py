@@ -107,15 +107,19 @@ def redirect_output(cmd: str, args: List[str], error: bool = False) -> None:
         args = args[:idx]
 
         # Capture the output (stdout + stderr)
-        main_output = helper.capture_output(cmd=cmd, args=args, capture_stderr=error)
+        stdout_output, stderr_output = helper.capture_output(
+            cmd=cmd, args=args, capture_stderr=error
+        )
 
         # Ensure directory exists
         if os.path.dirname(file) != "":
             os.makedirs(os.path.dirname(file), exist_ok=True)
 
-        if main_output is not None:
-            with open(file, "w") as f:
-                f.write(main_output)
+        with open(file, "w") as f:
+            if error and stderr_output:
+                f.write(stderr_output)
+            elif stdout_output:
+                f.write(stdout_output)
 
     except Exception as e:
         sys.stderr.write(str(e) + "\n")
