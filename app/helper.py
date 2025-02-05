@@ -37,7 +37,12 @@ def capture_output(
     full_cmd = f"{cmd} {' '.join(args)}"
     try:
         output = subprocess.run(
-            full_cmd, shell=True, text=True, capture_output=True, check=True
+            full_cmd,
+            shell=True,
+            text=True,
+            capture_output=True,
+            check=True,
+            stderr=subprocess.STDOUT if capture_stderr else None,
         )
         return (
             output.stdout,
