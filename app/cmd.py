@@ -107,7 +107,7 @@ def redirect_output(cmd: str, args: List[str], error: bool = False) -> None:
         args = args[:idx]
 
         # Capture the output (stdout + stderr)
-        main_output = helper.capture_output(cmd=cmd, args=args, error=error)
+        main_output = helper.capture_output(cmd=cmd, args=args, capture_stderr=error)
 
         # Ensure directory exists
         if os.path.dirname(file) != "":
