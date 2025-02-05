@@ -12,6 +12,9 @@ def main():
         if ">" in args or "1>" in args:
             cmd.redirect_output(command, args)
             continue
+        elif "2>" in args:
+            cmd.redirect_output(command, args, error=True)
+            continue
 
         # Check if the command is a shell builtin
         if helper.check_builtin_command(command):
